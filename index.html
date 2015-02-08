@@ -1,0 +1,125 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>cryptoGlance :: micro-pi Edition!</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="shortcut icon" href="favicon.png">
+
+        <link rel="stylesheet" href="css/cryptoglance-base.css">
+        <link rel="stylesheet" href="css/whhg.css">
+    </head>
+    <body>
+        <header>cryptoGlance :: micro-pi Edition!</header>
+
+        <h1 class="bitcoin"><small>CDN</small> <span>0</span> <i class="icon icon-chevron-up"></i></h1>
+        <section class="btc-meta">
+        </section>
+        <footer class="bitcoin">
+            <p>last updated &nbsp;<span class="yellow"></span></p>
+        </footer>
+
+        <h1 class="reddcoin"><span>0</span> <small>satoshi</small> <i class="icon icon-chevron-down"></i></h1>
+        <section class="rdd-meta">
+        </section>
+        <footer class="reddcoin">
+            <p>last updated &nbsp;<span class="yellow"></span></p>
+        </footer>
+
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
+        <script src="js/moment.min.js"></script>
+
+        <script type="text/javascript">
+            function externalLinks() {
+              if (!document.getElementsByTagName) return;
+              var anchors = document.getElementsByTagName("a");
+              for (var i=0; i<anchors.length; i++) {
+                var anchor = anchors[i];
+                if (anchor.getAttribute("href") &&
+                  anchor.getAttribute("rel") == "external")
+                  anchor.target = "_blank";
+              }
+            }
+
+            function updateBTC() {
+
+                window.compareBTCPrice = $("h1.bitcoin span").html();
+
+                $.getJSON("json-quadriga_cx.php").done(function() {
+                }, function(jsonBTC) {
+
+                    window.lastBTCtrade = jsonBTC.last;
+
+                    $("h1.bitcoin span").html(lastBTCtrade);
+
+                    var quadrigaTime = moment.unix(jsonBTC.timestamp).format("h:mm:ss a");
+                    $("footer.bitcoin span").html(quadrigaTime);
+
+                    console.log("lastBTCtrade == " + window.lastBTCtrade);
+                    console.log("compareBTCPrice == " + window.compareBTCPrice);
+
+                    if (window.lastBTCtrade > window.compareBTCPrice) {
+                        $("h1.bitcoin i").removeClass().addClass("icon icon-chevron-up green");
+                        $("h1.bitcoin span").removeClass().addClass("green");
+                    } else if (window.lastBTCtrade == window.compareBTCPrice) {
+                        $("h1.bitcoin i").removeClass().addClass("icon icon-minus yellow");
+                        $("h1.bitcoin span").removeClass().addClass("yellow");
+                    } else {
+                        $("h1.bitcoin i").removeClass().addClass("icon icon-chevron-down red");
+                        $("h1.bitcoin span").removeClass().addClass("red");
+                    }
+                });
+            }
+
+            function updateRDD() {
+
+                window.compareRDDPrice = $("h1.reddcoin span").html()/10000000;
+
+                $.getJSON("json-cryptsy.php").done(function() {
+                }, function(jsonRDD) {
+
+                    window.lastRDDtrade = (jsonRDD.return.markets.RDD.lasttradeprice*100000000).toFixed(0);
+
+                    $("h1.reddcoin span").html(lastRDDtrade);
+
+                    var cryptsyTime = moment(jsonRDD.return.markets.RDD.lasttradetime).format("h:mm:ss a");
+                    $("footer.reddcoin span").html(cryptsyTime);
+
+                    console.log("lastRDDtrade == " + window.lastRDDtrade);
+                    console.log("compareRDDrice == " + window.compareRDDPrice);
+
+                    if (window.lastRDDtrade > window.compareRDDPrice) {
+                        $("h1.reddcoin i").removeClass().addClass("icon icon-chevron-up green");
+                        $("h1.reddcoin span").removeClass().addClass("green");
+                    } else if (window.lastRDDtrade == window.compareRDDPrice) {
+                        $("h1.reddcoin i").removeClass().addClass("icon icon-minus yellow");
+                        $("h1.reddcoin span").removeClass().addClass("yellow");
+                    } else {
+                        $("h1.reddcoin i").removeClass().addClass("icon icon-chevron-down red");
+                        $("h1.reddcoin span").removeClass().addClass("red");
+                    }
+                });
+            }
+
+            function LoopForever() {
+                updateBTC();
+                updateRDD();
+            }
+
+            $(document).ready(function() {
+                externalLinks();
+                updateBTC();
+                updateRDD();
+
+                var interval = self.setInterval(function(){LoopForever()},60000);
+
+            });
+        </script>
+    </body>
+</html>
