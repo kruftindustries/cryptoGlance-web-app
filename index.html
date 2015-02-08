@@ -79,12 +79,15 @@
 
             function updateRDD() {
 
-                window.compareRDDPrice = $("h1.reddcoin span").html()/10000000;
+                // TODO: There's a bug in the calculation here, try all cases to see (thinks 4 > 10 for e.g.)
+
+                window.compareRDDPrice = $("h1.reddcoin span").html();
 
                 $.getJSON("json-cryptsy.php").done(function() {
                 }, function(jsonRDD) {
 
-                    window.lastRDDtrade = (jsonRDD.return.markets.RDD.lasttradeprice*100000000).toFixed(0);
+                    window.lastRDDtrade = jsonRDD.return.markets.RDD.lasttradeprice;
+                    window.lastRDDtrade /= Math.pow(10, -8);
 
                     $("h1.reddcoin span").html(lastRDDtrade);
 
