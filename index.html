@@ -15,21 +15,68 @@
     <body>
         <header>cryptoGlance :: micro-pi Edition!</header>
 
-        <h1 class="bitcoin"><small>CDN</small> <span>0</span> <i class="icon icon-chevron-up"></i></h1>
-        <section class="btc-meta">
-        </section>
-        <footer class="bitcoin">
-            <p>last updated &nbsp;<span class="yellow"></span></p>
-        </footer>
+        <div id="tabs">
+            <div class="tab main">
+                <h1 class="bitcoin"><small>CDN</small> <span>0</span> <i class="icon icon-timer"></i></h1>
+                <section class="btc-meta">
+                </section>
+                <footer class="bitcoin">
+                    <p>last updated &nbsp;<span class="yellow"></span></p>
+                </footer>
 
-        <h1 class="reddcoin"><span>0</span> <small>satoshi</small> <i class="icon icon-chevron-down"></i></h1>
-        <section class="rdd-meta">
-        </section>
-        <footer class="reddcoin">
-            <p>last updated &nbsp;<span class="yellow"></span></p>
-        </footer>
+                <h1 class="reddcoin"><span>0</span> <small>satoshi</small> <i class="icon icon-timer"></i></h1>
+                <section class="rdd-meta">
+                </section>
+                <footer class="reddcoin">
+                    <p>last updated &nbsp;<span class="yellow"></span></p>
+                </footer>
+            </div>
 
+            <div class="tab details">
+                <div id="bitcoin-bg"></div>
+                <div class="stat-pair blue" id="details-last">
+                    <p>0</p>
+                    <h4>last</h4>
+                </div>
 
+                <div class="stat-pair" id="details-volume">
+                    <p>0</p>
+                    <h4>volume</h4>
+                </div>
+
+                <div class="stat-pair green" id="details-high">
+                    <p>0</p>
+                    <h4>high</h4>
+                </div>
+
+                <div class="stat-pair red" id="details-low">
+                    <p>0</p>
+                    <h4>low</h4>
+                </div>
+
+                <div class="stat-pair orange" id="details-ask">
+                    <p>0</p>
+                    <h4>ask</h4>
+                </div>
+
+                <div class="stat-pair yellow" id="details-bid">
+                    <p>0</p>
+                    <h4>bid</h4>
+                </div>
+            </div>
+
+            <div class="tab balances">
+                <h1 class="balance"><span class="green">0 bitcoins :'(</span> <small>BTC</small></h1>
+                <p>Total Received:</p>
+                <h2><span id="totalreceived"></span> <small>BTC</small></h2>
+                <p>Total Spent:</p>
+                <h2><span id="totalspent" class="red"></span> <small>BTC</small></h2>
+            </div>
+
+            <div class="tab charts">
+                <img src="http://bitcoinity.org/markets/image?span=30d&size=medium&currency=CAD&exchange=cavirtex" alt="bitcoin price chart"/>
+            </div>
+        </div>
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.10.2.min.js"><\/script>')</script>
@@ -47,12 +94,45 @@
               }
             }
 
+            function updateBTCbalance() {
+
+                $.getJSON("json-blockr.php").done(function() {
+                }, function(jsonBTCbalance) {
+
+                    console.log(jsonBTCbalance);
+
+                    var sum = 0,
+                        cleanSum = 0,
+                        addressData = jsonBTCbalance.data,
+                        totalInputs = 0,
+                        totalSpent = 0,
+                        i;
+                    for (i = 0; i < addressData.length; i++) {  //loop through the array
+                        sum += addressData[i].balance;  //Do the math!
+                        totalInputs += addressData[i].totalreceived;  //Do the math!
+                    }
+
+                    sum /= Math.max(10, 8)/10;
+                    sum = sum.toFixed(8);
+                    totalInputs /= Math.max(10, 8)/10;
+                    totalInputs = totalInputs.toFixed(8);
+                    totalSpent = totalInputs - sum;
+
+                    $(".balances h1 span").html(sum);
+                    $(".balances h2 span").html(totalInputs);
+                    $(".balances h2:nth-of-type(2) span").html(totalSpent);
+                });
+            }
+
+
             function updateBTC() {
 
                 window.compareBTCPrice = $("h1.bitcoin span").html();
 
                 $.getJSON("json-quadriga_cx.php").done(function() {
                 }, function(jsonBTC) {
+
+                    console.log(jsonBTC);
 
                     window.lastBTCtrade = jsonBTC.last;
 
@@ -74,6 +154,17 @@
                         $("h1.bitcoin i").removeClass().addClass("icon icon-chevron-down red");
                         $("h1.bitcoin span").removeClass().addClass("red");
                     }
+
+                    var trimVolume = jsonBTC.volume;
+
+                    // build details screen
+                    $("#details-last p").html(jsonBTC.last);
+                    $("#details-volume p").html(trimVolume.slice(0,-6));
+                    $("#details-high p").html(jsonBTC.high);
+                    $("#details-low p").html(jsonBTC.low);
+                    $("#details-ask p").html(jsonBTC.ask);
+                    $("#details-bid p").html(jsonBTC.bid);
+
                 });
             }
 
@@ -85,6 +176,8 @@
 
                 $.getJSON("json-cryptsy.php").done(function() {
                 }, function(jsonRDD) {
+
+                    console.log(jsonRDD);
 
                     window.lastRDDtrade = jsonRDD.return.markets.RDD.lasttradeprice;
                     window.lastRDDtrade /= Math.pow(10, -8);
@@ -110,18 +203,62 @@
                 });
             }
 
-            function LoopForever() {
+            function apiUpdate() {
                 updateBTC();
                 updateRDD();
+                updateBTCbalance();
+            }
+
+            function cycleTabs() {
+                $("#tabs .tab:visible").fadeToggle( function() {
+                    if ($(this).next(".tab").length) {
+                        $(this).next(".tab").fadeToggle();
+                    } else {
+                        $("#tabs .tab:first").fadeToggle();
+                    }
+                });
             }
 
             $(document).ready(function() {
                 externalLinks();
-                updateBTC();
-                updateRDD();
+                apiUpdate();
 
-                var interval = self.setInterval(function(){LoopForever()},60000);
+                // set for a 10m delay on API updates
+                var apiInterval = self.setInterval(function(){apiUpdate()},600000);
 
+                // set for a 30s delay on switching screens of info
+                var screenSwitchInterval = self.setInterval(function(){
+                    cycleTabs();
+                },10000);
+
+                // bind keys and clicks to switch screens manually
+                $("body").click(function() {
+                    cycleTabs();
+                // clear the screenSwitchInterval so the info doesn't switch quickly in certain instances
+                    clearInterval(screenSwitchInterval);
+                // now that it's cleared, get'er goin' again!
+                    screenSwitchInterval = self.setInterval(function(){
+                        cycleTabs();
+                    },10000);
+                });
+
+                $(document).keydown(function(e) {
+                    switch(e.which) {
+                        case 83: // "s" key
+                        cycleTabs();
+                        // clear the screenSwitchInterval so the info doesn't switch quickly in certain instances
+                        clearInterval(screenSwitchInterval);
+                        // now that it's cleared, get'er goin' again!
+                        screenSwitchInterval = self.setInterval(function(){
+                            cycleTabs();
+                        },10000);
+
+                        break;
+
+                        default: return; // exit this handler for other keys
+                    }
+                    e.preventDefault(); // prevent the default action
+                });
             });
         </script>
     </body>

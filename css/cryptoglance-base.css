@@ -42,8 +42,9 @@ b, strong {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: captureit, sans-serif;
+  font-family: bebas, robotocondensed, sans-serif;
   font-weight: normal;
+  text-align: center;
   color: #33b5e5;
   letter-spacing: 1px;
   margin: 0;
@@ -51,14 +52,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-family: bebas, robotocondensed, sans-serif;
   font-size: 36px;
   text-align: right;
   padding: 0 10px;
   margin-top: 4px;
 }
 
-h1.bitcoin {
+h1.bitcoin, h1.balance {
   background: url(../images/coin-bitcoin.png) no-repeat center left;
 }
 
@@ -73,6 +73,21 @@ h1 span {
 h1.reddcoin span {
   max-width: 103px;
   overflow: hidden;
+}
+
+h1.balance {
+  margin-bottom: 10px;
+}
+
+h1.balance span {
+  font-size: 42px;
+  padding: 5px 0;
+  display: inline-block;
+}
+
+.balances h2 {
+  margin: 3px 0;
+  font-size: 28px;
 }
 
 hr {
@@ -162,11 +177,11 @@ i.yellow {
 }
 
 .orange {
-  color: #F89406;
+  color: #F87706;
 }
 
 i.orange {
-  text-shadow: 0 0 10px #F89406;
+  text-shadow: 0 0 10px #F87706;
 }
 
 .red {
@@ -187,12 +202,57 @@ header {
   text-indent: -10000px;
 }
 
-footer {
-  width: 100%;
+.details, .balances, .charts {
+  display: none;
+  text-align: center;
+}
+
+.charts img {
+  transform: scale(1.23);
+  position: relative;
+  top: 19px;
+}
+
+#bitcoin-bg {
+  position: absolute;
+  z-index: -1px;
+  height: 188px;
+  width: 318px;
+  opacity: 0.25;
+  background: url(../images/coin-bitcoin-large.png) no-repeat center;
+  background-size: contain;
+}
+
+.stat-pair {
+  background: rgba(255,255,255,0.1);
+  width: 48%;
+  display: inline-block;
+  overflow: hidden;
+  position: relative;
+  padding: 8px 0 2px;
+  margin: 3px 0;
+}
+
+.stat-pair p {
+  font-size: 26px;
+  margin: 0;
+  padding: 0 25px;
+  line-height: 25px;
+  text-shadow: 1px 2px 3px #000;
+}
+
+.stat-pair h4 {
+  font-size: 20px;
+  font-family: robotoblack, sans-serif;
+  font-style: normal;
+  text-shadow: 1px 2px 3px #000;
+}
+
+footer, .balances p {
   background: rgba(255,255,255,0.1);
 }
 
-footer p {
+footer p, .balances p {
   text-align: center;
   padding: 2px 0;
   margin: 0;
@@ -201,7 +261,16 @@ footer p {
   font-style: italic;
 }
 
-footer p span {
+.balances p {
+  font-family: robotoblack, sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  padding: 3px 0;
+  color: #999;
+  text-shadow: 1px 2px 3px #000;
+}
+
+footer p span, .balances p span {
   font-family: robotoblack, sans-serif;
   font-style: normal;
 }
