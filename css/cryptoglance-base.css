@@ -66,6 +66,10 @@ h1.reddcoin {
   background: url(../images/coin-reddcoin.png) no-repeat center left;
 }
 
+h1.cdn {
+  background: url(../images/coin-cdn.png) no-repeat center left;
+}
+
 h1 span {
   font-size: 64px;
 }

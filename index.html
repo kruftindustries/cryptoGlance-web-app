@@ -32,6 +32,13 @@
                 </footer>
             </div>
 
+            <div class="tab balances">
+                <p>Total Bitcoins:</p>
+                <h1 class="balance"><span class="green">0 bitcoins :'(</span> <small>BTC</small></h1>
+                <p>Total Value in CDN:</p>
+                <h1 class="cdn">$<span id="totalcdn"></span></h2>
+            </div>
+
             <div class="tab details">
                 <div id="bitcoin-bg"></div>
                 <div class="stat-pair blue" id="details-last">
@@ -63,14 +70,6 @@
                     <p>0</p>
                     <h4>bid</h4>
                 </div>
-            </div>
-
-            <div class="tab balances">
-                <h1 class="balance"><span class="green">0 bitcoins :'(</span> <small>BTC</small></h1>
-                <p>Total Received:</p>
-                <h2><span id="totalreceived"></span> <small>BTC</small></h2>
-                <p>Total Spent:</p>
-                <h2><span id="totalspent" class="red"></span> <small>BTC</small></h2>
             </div>
 
             <div class="tab charts">
@@ -157,6 +156,10 @@
 
                     var trimVolume = jsonBTC.volume;
 
+                    var currentBTCprice = $(".balances h1 span").html();
+                    var currentCDNvalue = (jsonBTC.ask * currentBTCprice);
+                    var currentCDNvalue = currentCDNvalue.toFixed(2);
+
                     // build details screen
                     $("#details-last p").html(jsonBTC.last);
                     $("#details-volume p").html(trimVolume.slice(0,-6));
@@ -164,7 +167,7 @@
                     $("#details-low p").html(jsonBTC.low);
                     $("#details-ask p").html(jsonBTC.ask);
                     $("#details-bid p").html(jsonBTC.bid);
-
+                    $(".balances span#totalcdn").html(currentCDNvalue);
                 });
             }
 
