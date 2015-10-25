@@ -181,6 +181,7 @@
 
                     window.lastRDDtrade = jsonRDD.return.markets.RDD.lasttradeprice;
                     window.lastRDDtrade /= Math.pow(10, -8);
+                    window.lastRDDtrade = window.lastRDDtrade.toFixed(0);
 
                     $("h1.reddcoin span").html(lastRDDtrade);
 
