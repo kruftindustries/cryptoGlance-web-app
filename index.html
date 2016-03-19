@@ -73,7 +73,7 @@
             </div>
 
             <div class="tab charts">
-                <img src="https://bitcoinity.org/markets/image?span=7d&size=medium&currency=CAD&exchange=cavirtex" alt="bitcoin price chart"/>
+                <img src="https://bitcoinity.org/markets/image?span=7d&size=medium&currency=CAD&exchange=quadrigacx" alt="bitcoin price chart"/>
             </div>
         </div>
 
@@ -158,7 +158,7 @@
 
                     var currentBTCprice = $(".balances h1 span").html();
                     var currentCDNvalue = (jsonBTC.ask * currentBTCprice);
-                    var currentCDNvalue = currentCDNvalue.toFixed(2);
+                    var currentCDNvalueRounded = currentCDNvalue.toFixed(2);
 
                     // build details screen
                     $("#details-last p").html(jsonBTC.last);
@@ -167,7 +167,7 @@
                     $("#details-low p").html(jsonBTC.low);
                     $("#details-ask p").html(jsonBTC.ask);
                     $("#details-bid p").html(jsonBTC.bid);
-                    $(".balances span#totalcdn").html(currentCDNvalue);
+                    $(".balances span#totalcdn").html(currentCDNvalueRounded);
                 });
             }
 
@@ -177,19 +177,20 @@
 
                 window.compareRDDPrice = $("h1.reddcoin span").html();
 
-                $.getJSON("json-cryptsy.php").done(function() {
+                $.getJSON("json-poloniex.php").done(function() {
                 }, function(jsonRDD) {
 
                     console.log(jsonRDD);
 
-                    window.lastRDDtrade = jsonRDD.return.markets.RDD.lasttradeprice;
+                    window.lastRDDtrade = jsonRDD.BTC_RDD.last;
                     window.lastRDDtrade /= Math.pow(10, -8);
                     window.lastRDDtrade = window.lastRDDtrade.toFixed(0);
 
                     $("h1.reddcoin span").html(lastRDDtrade);
 
-                    var cryptsyTime = moment(jsonRDD.return.markets.RDD.lasttradetime).format("h:mm:ss a");
-                    $("footer.reddcoin span").html(cryptsyTime);
+                    //var cryptsyTime = moment(jsonRDD.BTC_RDD.last).format("h:mm:ss a");
+                    var poloniexTime = moment().format("h:mm:ss a");
+                    $("footer.reddcoin span").html(poloniexTime);
 
                     console.log("lastRDDtrade == " + window.lastRDDtrade);
                     console.log("compareRDDrice == " + window.compareRDDPrice);

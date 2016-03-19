@@ -1,6 +1,6 @@
 <?php
-    $url = "http://api.quadrigacx.com/v2/ticker";
-    
+    $url = "https://api.quadrigacx.com/v2/ticker";
+
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_FAILONERROR, true);
     curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);

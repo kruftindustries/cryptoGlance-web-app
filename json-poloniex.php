@@ -1,5 +1,6 @@
 <?php
-    $url = "http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=169";
+    //$url = "http://pubapi.cryptsy.com/api.php?method=singlemarketdata&marketid=169";
+    $url = "https://poloniex.com/public?command=returnTicker";
 
     $curl = curl_init($url);
     curl_setopt($curl, CURLOPT_FAILONERROR, true);
