@@ -166,6 +166,12 @@ class Config_Pools extends Config_Abstract {
                 'name' => ($label ? $label : 'mining.bitcoin.cz'),
                 'apikey' => $api,
             );
+        } else if ($type == 'litecoinpool' && !empty($api)) {
+            $pool = array(
+                'type' => $type,
+                'name' => ($label ? $label : 'Litecoin Pool'),
+                'apikey' => $api,
+            );     
         } else {
             header("HTTP/1.0 406 Not Acceptable"); // not accepted
             return 'All fields are required on this form.';
