@@ -30,14 +30,15 @@ class Pools_Litecoinpool extends Pools_Abstract {
             $data['type'] = $this->_type;
 
             // Pool Speed
-            $data['pool_hashrate'] = formatHashRate($poolData['pool']['hash_rate']);
+            
             $data['user_hashrate'] = 0;
-
+			$data['LTC_per_day'] = number_format(((501656.9049536115 * $poolData['pool']['pps_ratio']) / $poolData['network']['difficulty']) / 1000 * 63.85,4);
+			$data['USD_per_day'] = number_format($data['LTC_per_day'] * $poolData['market']['ltc_usd'] ,2) . ' USD';
             $data['paid_LTC'] = $poolData['user']['paid_rewards'];
             $data['unpaid_LTC'] = $poolData['user']['unpaid_rewards'];
             $data['past_24h_LTC'] = $poolData['user']['past_24h_rewards'];
             $data['LTC_difficulty'] = $poolData['network']['difficulty'];
-			//$data['LTC_profitability'] = ((501656.9049536115 *$poolData['network']['pps_ratio']) / $poolData['network']['difficulty']) * ($poolData['user']['hash_rate'] / 1000000);
+			
             $data['valid_LTC_shares'] = 0;
             $data['stale_LTC_shares'] = 0;
             $data['duplicate_LTC_shares'] = 0;
@@ -68,7 +69,7 @@ class Pools_Litecoinpool extends Pools_Abstract {
                     unset($data[$key]);
                 }
             }
-
+			$data['pool_hashrate'] = formatHashRate($poolData['pool']['hash_rate']);
             $data['url'] = $this->_apiURL;
 
             $this->_fileHandler->write(json_encode($data));
